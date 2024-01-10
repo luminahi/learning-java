@@ -2,12 +2,12 @@ package record.lib;
 
 import java.util.Objects;
 
-public class Employee {
+public class EmployeeClass {
     
     private final String name;
     private final int employeeNumber;
 
-    public Employee(String name, int employeeNumber) {
+    public EmployeeClass(String name, int employeeNumber) {
         this.name = name;
         this.employeeNumber = employeeNumber;
     }
@@ -36,7 +36,7 @@ public class Employee {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
 
-        Employee employee = (Employee) obj;
+        EmployeeClass employee = (EmployeeClass) obj;
 
         return Objects.equals(name, employee.name) 
         && Objects.equals(employeeNumber, employee.employeeNumber);

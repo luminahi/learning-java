@@ -1,31 +1,17 @@
 package collector;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.BiFunction;
-import java.util.HashMap;
 // import java.util.function.Function;
 // import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import collector.lib.Employee;
 
 public class App {
-    
-
-    public static void main(String[] args) throws IOException {
-        
+    private static void builtinCollector() {
         // Function<Employee, Integer> fn1 = Employee::getSalary;
         // ToIntFunction<Employee> fn2 = Employee::getSalary;
 
@@ -54,9 +40,11 @@ public class App {
         Collector<Employee, ?, Map<String, Integer>> collector = Collectors.groupingBy(Employee::department, summingSalaries);
         
         Stream<Employee> employeeStream = Arrays.asList(alex, sora, sara, karen).stream();
-
         Map<String, Integer> employeeMap = employeeStream.collect(collector);
 
         employeeMap.forEach((key, value) -> System.out.println(key + ", " + value));
+    }
+    public static void main(String[] args) throws IOException {
+        builtinCollector(); 
     }
 }

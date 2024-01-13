@@ -1,4 +1,4 @@
-package enumtype.lib;
+package java_enum.lib;
 
 public class Healer {
 

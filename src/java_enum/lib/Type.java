@@ -1,4 +1,4 @@
-package enumtype.lib;
+package java_enum.lib;
 
 public enum Type {
     FIRE(0.5F, 2F),

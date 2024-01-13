@@ -1,8 +1,8 @@
-package enumtype;
+package java_enum;
 
-import enumtype.lib.Healer;
-import enumtype.lib.Job;
-import enumtype.lib.Type;
+import java_enum.lib.Healer;
+import java_enum.lib.Job;
+import java_enum.lib.Type;
 
 public class App {
 

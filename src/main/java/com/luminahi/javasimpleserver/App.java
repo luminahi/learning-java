@@ -3,15 +3,17 @@ package com.luminahi.javasimpleserver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.lang.Runnable;
 import java.net.Socket;
 
 public class App {
 
-    public static void listen(final int port) {
+    public static void listen(final int port, String hostname, Runnable fn) {
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("server running at port " + port);
+        try (ServerSocket serverSocket = new ServerSocket(port, 0, InetAddress.getByName(hostname))) {
+            fn.run();
             
             while (true) {
                 try(Socket clientSocket = serverSocket.accept()) {
@@ -26,7 +28,11 @@ public class App {
         }
     }
     public static void main(String[] args) {
-        listen(8080);
+        
+        listen(8080, "0.0.0.0", () -> { 
+            System.out.println("server running at port " + 8080);    
+        });
+    
     }
 
     private static void handleClient(Socket clientSocket) {

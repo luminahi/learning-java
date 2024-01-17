@@ -28,7 +28,7 @@ public class App {
         }
     }
     public static void main(String[] args) {
-        
+
         listen(8080, "0.0.0.0", () -> { 
             System.out.println("server running at port " + 8080);    
         });
@@ -51,7 +51,8 @@ public class App {
             System.out.println(clientData);
 
             // send response to client
-            String response = "Hello Client";
+            String response = "HTTP/1.1 200 OK\nContent-Type: text/html\nConnection: keep-alive\n\n<h1>Hello, Client!</h1>";
+            // String response = "Hello Client";
             outputStream.write(response.getBytes());
 
         } catch (IOException e) {

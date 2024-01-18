@@ -7,7 +7,7 @@ public class App {
         var check = isEven()
             .and(isPositive())
             .and(isEqualTo100())
-            .test(-1);
+            .test(100);
         
         System.out.println(check);
     }

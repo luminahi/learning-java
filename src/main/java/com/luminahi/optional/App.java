@@ -1,10 +1,48 @@
 package com.luminahi.optional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import com.luminahi.optional.lib.Pokemon;
 
 public class App {
     
+    public static void mapping() {
+                List<String> list = Arrays.asList("alex", "sora", "sarah", "karen");
+        
+        Optional<List<String>> optional = Optional.of(list);
+
+        Optional<?> filterResult = optional.
+            filter((value) -> value.size() > 2).
+            filter((value) -> value.size() < 8);
+
+        if (filterResult.isEmpty()) {
+            System.out.println("totalmente vazio!");
+        } else {
+            System.out.println("cool! filter pass!");
+        }
+
+        Optional<Integer> mapResult = optional
+            .map((value) -> value.size())
+            .map((value) -> value * 10);
+
+        if (mapResult.isEmpty()) {
+            System.out.println("now empty!");
+        } else {
+            System.out.println("cool! map pass!");
+        }
+
+        Optional<Integer> flatMapResult = optional.flatMap((value) -> {
+            if (value.size() > 2) {
+                return Optional.ofNullable(value.size());
+            } else {
+                return Optional.empty();
+            }
+        });
+
+        System.out.println(flatMapResult);
+    }
+
     class FairyPokemon extends Pokemon {
         public FairyPokemon() {}
     }
@@ -13,7 +51,10 @@ public class App {
         Pokemon pokemon = new Pokemon(pokemonName);
         return Optional.ofNullable(pokemon);
     }
+
     public static void main(String[] args) {
+        // mapping();
+        
         Optional<Pokemon> pokemon = getPokemonByName("pikachu");
         
         // checking if is present

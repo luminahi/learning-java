@@ -1,6 +1,6 @@
 package com.luminahi.combinatorpattern;
 
-import com.luminahi.playground.StringValidator;
+import com.luminahi.combinatorpattern.lib2.*;
 
 public class App2 {
     public static void main(String args[]) {

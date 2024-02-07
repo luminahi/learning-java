@@ -7,40 +7,61 @@ import java.util.stream.LongStream;
 
 public class App {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+        long size = 500;
+        
         long start = System.currentTimeMillis();
-        long result = multiThreadPrimeSum(5_000_000);
+        long result = multiThreadPrimeSum(size);
         System.out.println(result);
         long end = System.currentTimeMillis();
         System.out.println(String.format("%s ms", end - start));
 
         start = System.currentTimeMillis();
-        result = calcSumOfPrimeNumbers(0, 5_000_000);
+        result = calcSumOfPrimeNumbers(0, size);
         System.out.println(result);
         end = System.currentTimeMillis();
         System.out.println(String.format("%s ms", end - start));
     }
 
-    static private long multiThreadPrimeSum(long size) throws InterruptedException {
+    static private long multiThreadPrimeSum(long size) {
         AtomicLong accumulator = new AtomicLong(0);
         List<Thread> threads = new ArrayList<>();
         
-        int processors = Runtime.getRuntime().availableProcessors();
-        long partial = size / processors;
+        long processors = Runtime.getRuntime().availableProcessors();
+        long part = (size / processors);
+        long remaining = size % processors;
+        System.out.println(part + " " + remaining);
 
         for (int i = 0; i < processors; i++) {
             final int step = i;
-            Thread thread = new Thread(() -> {
-                long temp = calcSumOfPrimeNumbers(step * partial, (step + 1) * partial);
-                accumulator.addAndGet(temp);
-            });
+            long start = step * part;
+            long end = (step + 1) * part;
+            Thread thread = null;
 
+            // verify if the remaining value of (size / processors) is 
+            // properly added to the calculation  
+            if (step == processors - 1) {
+                thread = new Thread(() -> {
+                    long temp = calcSumOfPrimeNumbers(start, end + remaining);
+                    accumulator.addAndGet(temp);
+                });
+            } else {
+                thread = new Thread(() -> {
+                    long temp = calcSumOfPrimeNumbers(start, end);
+                    accumulator.addAndGet(temp);
+                });
+            }
+            
             threads.add(thread);
             thread.start();
         }
 
         for (Thread thread : threads) {
-            thread.join();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         
         System.out.println("All threads have finished");

@@ -27,10 +27,9 @@ public class App {
         AtomicLong accumulator = new AtomicLong(0);
         List<Thread> threads = new ArrayList<>();
         
-        long processors = Runtime.getRuntime().availableProcessors();
-        long part = (size / processors);
-        long remaining = size % processors;
-        System.out.println(part + " " + remaining);
+        final long processors = Runtime.getRuntime().availableProcessors();
+        final long part = (size / processors);
+        final long remaining = size % processors;
 
         for (int i = 0; i < processors; i++) {
             final int step = i;
@@ -40,17 +39,10 @@ public class App {
 
             // verify if the remaining value of (size / processors) is 
             // properly added to the calculation  
-            if (step == processors - 1) {
-                thread = new Thread(() -> {
-                    long temp = calcSumOfPrimeNumbers(start, end + remaining);
-                    accumulator.addAndGet(temp);
-                });
-            } else {
-                thread = new Thread(() -> {
-                    long temp = calcSumOfPrimeNumbers(start, end);
-                    accumulator.addAndGet(temp);
-                });
-            }
+            if (step == processors - 1)
+                thread = startTask(start, end + remaining, accumulator);
+            else
+                thread = startTask(start, end, accumulator);
             
             threads.add(thread);
             thread.start();
@@ -66,6 +58,13 @@ public class App {
         
         System.out.println("All threads have finished");
         return accumulator.get();
+    }
+
+    static private Thread startTask(long start, long end, AtomicLong accumulator) {
+        return new Thread(() -> {
+            long partialSum = calcSumOfPrimeNumbers(start, end);
+            accumulator.addAndGet(partialSum);
+        });
     }
 
     static private boolean isPrimeNumber(Long number) {

@@ -8,7 +8,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
-public class Receiver {
+public class Worker {
 
     private final static String QUEUE_NAME = "task_queue";
 
@@ -21,14 +21,32 @@ public class Receiver {
             Channel channel = connection.createChannel();
 
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.basicQos(1);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println(String.format("[x] Received %s", message));
+                System.out.println(String.format("[.] Received [%s]", message));
+
+                try {
+                    doWork(message);
+                } finally {
+                    System.out.println("[x] done");
+                    long deliveryTag = delivery.getEnvelope().getDeliveryTag();
+                    channel.basicAck(deliveryTag, false);
+                }
             };
 
-            channel.basicConsume(QUEUE_NAME, true, deliverCallback,  c -> {});
+            channel.basicConsume(QUEUE_NAME, false, deliverCallback, c -> {});
         } catch( IOException | TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void doWork(String task) {
+        int seconds = task.length();
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

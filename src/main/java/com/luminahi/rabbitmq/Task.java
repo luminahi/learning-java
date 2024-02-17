@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import com.rabbitmq.client.Channel;
 
-public class Sender {
+public class Task {
 
     private final static String QUEUE_NAME = "task_queue";
 
@@ -20,7 +20,7 @@ public class Sender {
             Channel channel = connection.createChannel();
         ) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            String message = "java hello";
+            String message = String.join(" ", args);
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
             System.out.println(String.format("[x] Sent %s", message));
         } catch( IOException | TimeoutException e) {

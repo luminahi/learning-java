@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.LongStream;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmCallback;
@@ -18,9 +19,11 @@ public class App {
     private final static String QUEUE_NAME = "task_queue";
 
     public static void main(String[] args) {
-        Queue<String> messageQueue = new LinkedList<>(
-            List.of("Alex", "Sara", "Karen")
-        );
+        
+        
+        Queue<String> messageQueue = new LinkedList<>();
+
+        LongStream.range(0, 50_000).forEach(element -> messageQueue.add("message: " + element));
         
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
